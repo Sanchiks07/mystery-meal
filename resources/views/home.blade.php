@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
+<x-layout>
     <title>Fridge Recipe Finder</title>
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -171,11 +169,19 @@ $categories = [
 
         </div>
 
-        @if(isset($selected) && count($selected) > 0)
+        @if(session('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
 
-            <div class="selected-box">
+        <div id="search-state-container">
 
-                @foreach($selected as $item)
+            @if(isset($selected) && count($selected) > 0)
+
+                <div class="selected-box">
+
+                    @foreach($selected as $item)
 
                     <form
                         method="POST"
@@ -291,9 +297,10 @@ $categories = [
 
         @endif
 
+        </div>
+
     </main>
 
 </div>
 
-</body>
-</html>
+</x-layout>

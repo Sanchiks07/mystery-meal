@@ -6,16 +6,17 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\GameController;
 
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\UserRecipeController;
 
-Route::get('/', [RecipeController::class, 'index']);
+Route::get('/', [RecipeController::class, 'index'])->name('home')->middleware('auth');
 
 Route::post('/search', [RecipeController::class, 'search']);
 
 Route::get('/recipe/{id}', [RecipeController::class, 'show']);
 
-Route::get('/', function () {
-    return view('home');
-})->name('home')->middleware('auth');
+// USER RECIPES
+Route::get('/recipes/create', [UserRecipeController::class, 'create'])->name('recipes.create')->middleware('auth');
+Route::post('/recipes', [UserRecipeController::class, 'store'])->name('recipes.store')->middleware('auth');
 
 // LOGIN
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');

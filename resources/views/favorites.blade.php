@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
+<x-layout>
     <title>Favorites</title>
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -10,4 +8,4 @@
 <nav>
     <a href="/">Home</a>
     <a href="/favorites">Favorites</a>
-</
+</x-layout>

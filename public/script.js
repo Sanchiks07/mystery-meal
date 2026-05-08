@@ -1,3 +1,117 @@
+// ---------- INGREDIENTS PERSISTENCE ----------
+const INGREDIENTS_STORAGE_KEY = 'mystery-meal-selected-ingredients';
+const SEARCH_STATE_HTML_KEY = 'mystery-meal-search-state-html';
+
+function saveSelectedIngredients() {
+    const selected = Array.from(document.querySelectorAll('input[type="checkbox"][name="ingredients[]"]:checked')).map(el => el.value);
+    localStorage.setItem(INGREDIENTS_STORAGE_KEY, JSON.stringify(selected));
+    if (selected.length === 0) {
+        localStorage.removeItem(SEARCH_STATE_HTML_KEY);
+    }
+}
+
+function saveSearchState() {
+    const container = document.getElementById('search-state-container');
+    if (!container) {
+        return;
+    }
+
+    const html = container.innerHTML.trim();
+
+    if (html.length > 0) {
+        localStorage.setItem(SEARCH_STATE_HTML_KEY, html);
+    } else {
+        localStorage.removeItem(SEARCH_STATE_HTML_KEY);
+    }
+}
+
+function restoreSelectedIngredients() {
+    const storedValue = localStorage.getItem(INGREDIENTS_STORAGE_KEY);
+    if (!storedValue) {
+        return;
+    }
+
+    let selected;
+    try {
+        selected = JSON.parse(storedValue);
+    } catch (error) {
+        return;
+    }
+
+    if (!Array.isArray(selected)) {
+        return;
+    }
+
+    document.querySelectorAll('input[type="checkbox"][name="ingredients[]"]').forEach(input => {
+        input.checked = selected.includes(input.value);
+    });
+}
+
+function restoreSearchState() {
+    const container = document.getElementById('search-state-container');
+    if (!container) {
+        return;
+    }
+
+    if (container.children.length > 0) {
+        return;
+    }
+
+    const storedHtml = localStorage.getItem(SEARCH_STATE_HTML_KEY);
+    if (!storedHtml) {
+        return;
+    }
+
+    const checkedInputs = document.querySelectorAll('input[type="checkbox"][name="ingredients[]"]:checked');
+    if (checkedInputs.length === 0) {
+        return;
+    }
+
+    container.innerHTML = storedHtml;
+}
+
+window.addEventListener('pageshow', () => {
+    const inputs = document.querySelectorAll('input[type="checkbox"][name="ingredients[]"]');
+    if (inputs.length > 0) {
+        // Only restore if NOT on the create recipe page
+        const isCreatePage = window.location.pathname.includes('/recipes/create');
+        if (!isCreatePage) {
+            restoreSelectedIngredients();
+            restoreSearchState();
+        } else {
+            // On create page, clear persistence for a fresh start
+            localStorage.removeItem(INGREDIENTS_STORAGE_KEY);
+            localStorage.removeItem(SEARCH_STATE_HTML_KEY);
+        }
+        saveSearchState();
+        inputs.forEach(input => input.addEventListener('change', () => {
+            saveSelectedIngredients();
+            saveSearchState();
+        }));
+    }
+
+    const tagForms = document.querySelectorAll('.tag-form');
+    tagForms.forEach(form => {
+        const button = form.querySelector('.selected-tag');
+        if (button) {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const ingredientName = button.textContent.trim().replace('×', '').trim();
+                
+                const checkbox = document.querySelector(`input[type="checkbox"][name="ingredients[]"][value="${ingredientName}"]`);
+                if (checkbox) {
+                    checkbox.checked = false;
+                    saveSelectedIngredients();
+                    saveSearchState();
+                }
+                
+                form.submit();
+            });
+        }
+    });
+});
+
 // ---------- GAME LOGIC ----------
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");

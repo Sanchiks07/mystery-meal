@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
+<x-layout>
     <title>{{ $recipe['name'] ?? 'Recipe' }}</title>
 
     <link rel="stylesheet" href="{{ asset('css/recipe.css') }}">
@@ -66,5 +64,4 @@
 
 </div>
 
-</body>
-</html>
+</x-layout>
