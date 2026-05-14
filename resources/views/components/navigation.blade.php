@@ -3,8 +3,8 @@
     <!-- LEFT SIDE -->
     <div class="nav-left">
         <a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
-        <a href="{{ route('game') }}" class="{{ request()->is('game') ? 'active' : '' }}">Game</a>
-        <a href="{{ route('highscores') }}" class="{{ request()->is('highscores') ? 'active' : '' }}">Highscore</a>
+        <a href="{{ route('game') }}" class="{{ request()->is('game') ? 'active' : '' }}">Mini-Game</a>
+        <a href="{{ route('highscores') }}" class="{{ request()->is('highscores') ? 'active' : '' }}">Leaderboard</a>
     </div>
 
     <!-- HAMBURGER -->

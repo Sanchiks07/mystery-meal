@@ -1,10 +1,18 @@
 <x-layout>
     <div class="game-container">
-        <h1>Catch Game</h1>
-        <p>Score: <span id="score">0</span></p>
+        <h1>Food Mini-Game</h1>
 
-        <canvas id="gameCanvas"></canvas>
+        <div class="stats">
+            <p>Score: <span id="score">0</span></p>
+            <p>Best: <span id="bestScore">{{ $bestScore }}</span></p>
+        </div>
 
-        <p id="gameOver">Game Over</p>
+        <canvas id="gameCanvas" width="500"  height="600"> </canvas>
+
+        <p id="gameOver"></p>
     </div>
+
+    <script>
+        window.savedBestScore = {{ $bestScore ?? 0 }};
+    </script>
 </x-layout>

@@ -1,109 +1,274 @@
-// ---------- GAME LOGIC ----------
 const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
 
-let platform = {
-    x: 150,
-    y: 550,
-    width: 100,
-    height: 10,
-    speed: 6
-};
+if (canvas) {
+    const ctx = canvas.getContext("2d");
 
-let items = [];
-let score = 0;
-let gameOver = false;
+    // ---------------- STATE ----------------
+    let score = 0;
+    let bestScore = Number(window.savedBestScore) || 0;
+    let gameOver = false;
+    let items = [];
 
-let keys = { left: false, right: false };
+    let mouseControl = false;
+    let tabVisible = true;
 
-// Controls
-document.addEventListener("keydown", e => {
-    if (e.key === "ArrowLeft") keys.left = true;
-    if (e.key === "ArrowRight") keys.right = true;
-});
+    let spawnTimer = 0;
+    let lastFrameTime = performance.now();
 
-document.addEventListener("keyup", e => {
-    if (e.key === "ArrowLeft") keys.left = false;
-    if (e.key === "ArrowRight") keys.right = false;
-});
+    document.getElementById("bestScore").innerText = bestScore;
 
-// Spawn items
-function spawnItem() {
-    items.push({
-        x: Math.random() * 360,
-        y: 0,
-        size: 20,
-        speed: 2 + Math.random() * 3,
-        good: Math.random() > 0.3
+    // ---------------- PLATFORM ----------------
+    const platform = {
+        x: canvas.width / 2 - 60,
+        y: canvas.height - 30,
+        width: 120,
+        height: 20,
+        speed: 8
+    };
+
+    // ---------------- CONTROLS ----------------
+    const keys = {
+        left: false,
+        right: false
+    };
+
+    document.addEventListener("keydown", e => {
+        if (mouseControl) return;
+        if (e.key === "ArrowLeft") keys.left = true;
+        if (e.key === "ArrowRight") keys.right = true;
     });
-}
 
-// Update
-function update() {
-    if (gameOver) return;
+    document.addEventListener("keyup", e => {
+        if (e.key === "ArrowLeft") keys.left = false;
+        if (e.key === "ArrowRight") keys.right = false;
+    });
 
-    if (keys.left) platform.x -= platform.speed;
-    if (keys.right) platform.x += platform.speed;
+    canvas.addEventListener("mousedown", e => {
+        if (e.button !== 0) return;
+        mouseControl = true;
+    });
 
-    platform.x = Math.max(0, Math.min(canvas.width - platform.width, platform.x));
+    document.addEventListener("mouseup", () => {
+        mouseControl = false;
+    });
 
-    items.forEach((item, i) => {
-        item.y += item.speed;
+    canvas.addEventListener("mousemove", e => {
+        if (!mouseControl) return;
 
-        if (
-            item.y + item.size >= platform.y &&
-            item.x < platform.x + platform.width &&
-            item.x + item.size > platform.x
-        ) {
-            if (item.good) {
-                score++;
-                document.getElementById("score").innerText = score;
-            } else {
-                endGame();
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+
+        platform.x = mouseX - platform.width / 2;
+    });
+
+    canvas.addEventListener("dragstart", e => e.preventDefault());
+    canvas.addEventListener("click", e => e.preventDefault());
+
+    // ---------------- TAB VISIBILITY ----------------
+    document.addEventListener("visibilitychange", () => {
+        tabVisible = !document.hidden;
+
+        if (!tabVisible) {
+            keys.left = false;
+            keys.right = false;
+        }
+
+        lastFrameTime = performance.now();
+        spawnTimer = 0;
+    });
+
+    // ---------------- IMAGES ----------------
+    function loadImage(src) {
+        const img = new Image();
+        img.src = src;
+        return img;
+    }
+
+    const loadedFood = [
+        loadImage("/images/game/apple.png"),
+        loadImage("/images/game/burger.png"),
+        loadImage("/images/game/cake.png"),
+        loadImage("/images/game/cookie.png"),
+        loadImage("/images/game/grape.png"),
+        loadImage("/images/game/ice-cream.png"),
+        loadImage("/images/game/lemon.png"),
+        loadImage("/images/game/pizza.png"),
+        loadImage("/images/game/sushi.png"),
+        loadImage("/images/game/taco.png")
+    ];
+
+    const loadedBad = [
+        loadImage("/images/game/bomb.png"),
+        loadImage("/images/game/knife.png"),
+        loadImage("/images/game/scissors.png"),
+        loadImage("/images/game/saw.png"),
+        loadImage("/images/game/high-heel.png")
+    ];
+
+    // ---------------- SPAWN ----------------
+    function spawnItem() {
+        if (gameOver || !tabVisible) return;
+        const good = Math.random() > 0.3;
+        const pool = good ? loadedFood : loadedBad;
+        const img = pool[Math.floor(Math.random() * pool.length)];
+
+        items.push({
+            x: Math.random() * (canvas.width - 40),
+            y: -50,
+
+            width: 40,
+            height: 40,
+
+            hitboxWidth: 26,
+            hitboxHeight: 26,
+
+            speed: 2 + Math.random() * 2,
+            good: good,
+            image: img
+        });
+    }
+
+    // ---------------- UPDATE ----------------
+    function update() {
+        if (gameOver) return;
+
+        if (!mouseControl) {
+            if (keys.left) platform.x -= platform.speed;
+            if (keys.right) platform.x += platform.speed;
+        }
+
+        platform.x = Math.max(0, Math.min(canvas.width - platform.width, platform.x));
+
+        for (let i = items.length - 1; i >= 0; i--) {
+            const item = items[i];
+            item.y += item.speed;
+
+            const hitboxX =
+                item.x + (item.width - item.hitboxWidth) / 2;
+
+            const hitboxY =
+                item.y + (item.height - item.hitboxHeight) / 2;
+
+            const caught =
+                hitboxX < platform.x + platform.width &&
+                hitboxX + item.hitboxWidth > platform.x &&
+                hitboxY < platform.y + platform.height &&
+                hitboxY + item.hitboxHeight > platform.y;
+
+            if (caught) {
+                if (item.good) {
+                    score++;
+                    document.getElementById("score").innerText = score;
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                        document.getElementById("bestScore").innerText = bestScore;
+                    }
+                } else {
+                    endGame();
+                }
+
+                items.splice(i, 1);
+                continue;
             }
-            items.splice(i, 1);
+
+            if (item.y > canvas.height + 100) {
+                items.splice(i, 1);
+            }
         }
+    }
 
-        if (item.y > canvas.height) {
-            items.splice(i, 1);
+    // ---------------- DRAW ----------------
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#1f3d2b";
+
+        ctx.fillRect(
+            platform.x,
+            platform.y,
+            platform.width,
+            platform.height
+        );
+
+        for (const item of items) {
+            if (!item.image.complete || item.image.naturalWidth === 0) continue;
+
+            ctx.drawImage(
+                item.image,
+                item.x,
+                item.y,
+                item.width,
+                item.height
+            );
         }
-    });
-}
+    }
 
-// Draw
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ---------------- LOOP ----------------
+    function loop(now) {
+        if (!gameOver) {
+            const delta = now - lastFrameTime;
+            lastFrameTime = now;
 
-    ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+            if (tabVisible) {
+                update();
+                draw();
+                spawnTimer += delta;
 
-    items.forEach(item => {
-        ctx.fillStyle = item.good ? "green" : "red";
-        ctx.fillRect(item.x, item.y, item.size, item.size);
-    });
-}
+                if (spawnTimer >= 900) {
+                    spawnItem();
+                    spawnTimer = 0;
+                }
+            }
 
-// Loop
-function loop() {
-    update();
-    draw();
+            requestAnimationFrame(loop);
+        }
+    }
+
     requestAnimationFrame(loop);
-}
 
-setInterval(spawnItem, 1000);
+    // ---------------- SAVE ----------------
+    async function saveHighscore() {
+        try {
+            await fetch("/save-score", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN":
+                        document.querySelector(
+                            'meta[name="csrf-token"]'
+                        ).content
+                },
+                body: JSON.stringify({
+                    score: bestScore
+                })
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
-// End game
-function endGame() {
-    gameOver = true;
-    document.getElementById("gameOver").style.display = "block";
+    // ---------------- GAME OVER ----------------
+    async function endGame() {
+        if (gameOver) return;
+        gameOver = true;
+        document.getElementById("gameOver").style.display = "block";
 
-    fetch("/save-score", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ score: score })
+        await saveHighscore();
+    }
+
+    // Click to dismiss game over popup and restart
+    document.getElementById("gameOver").addEventListener("click", () => {
+        document.getElementById("gameOver").style.display = "none";
+        // Reset game state
+        gameOver = false;
+        score = 0;
+        items = [];
+        platform.x = canvas.width / 2 - 60; // Reset platform to center
+        spawnTimer = 0;
+        lastFrameTime = performance.now();
+        document.getElementById("score").innerText = score;
+        // Restart game loop
+        requestAnimationFrame(loop);
     });
 }
-
-loop();
