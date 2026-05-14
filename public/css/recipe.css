@@ -1,0 +1,106 @@
+body{
+    margin:0;
+    font-family:'Segoe UI', Arial, sans-serif;
+    background: radial-gradient(circle at top left, #1c4f3b, #09110c 45%, #020602 100%);
+    color:#f8fafc;
+    min-height:100vh;
+    overflow:auto;
+}
+
+/* PAGE */
+.recipe-page{
+    max-width:980px;
+    margin:40px auto 60px;
+    padding:40px;
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:32px;
+    box-shadow:0 30px 90px rgba(0,0,0,0.35);
+}
+
+/* BACK */
+.back-btn{
+    display:inline-block;
+    margin-bottom:24px;
+    text-decoration:none;
+    color:#ffcc00;
+    font-weight:700;
+}
+
+/* TITLE */
+h1{
+    font-size:42px;
+    margin-bottom:18px;
+    letter-spacing:-0.5px;
+    color:#f8fafc;
+}
+
+/* IMAGE (SMALLER + CLEANER) */
+.recipe-big-img{
+    width:100%;
+    max-height:320px;
+    object-fit:cover;
+    border-radius:22px;
+    margin-bottom:24px;
+    box-shadow:0 30px 90px rgba(0,0,0,0.32);
+}
+
+/* INFO */
+.info-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+}
+
+.info-box{
+    background: rgba(255,255,255,0.08);
+    padding:10px 16px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
+    color:#f8fafc;
+    border:1px solid rgba(255,255,255,0.12);
+}
+
+/* SECTIONS */
+.section{
+    background: rgba(255,255,255,0.05);
+    padding:24px;
+    border-radius:24px;
+    margin-bottom:18px;
+    border:1px solid rgba(255,255,255,0.10);
+    box-shadow:0 25px 70px rgba(0,0,0,0.25);
+}
+
+/* SECTION TITLES */
+.section h2{
+    font-size:18px;
+    margin-bottom:12px;
+    color:#f8fafc;
+}
+
+/* INGREDIENTS */
+.section ul{
+    padding-left:18px;
+}
+
+.section li{
+    margin-bottom:10px;
+    font-size:15px;
+    color:#d1d5db;
+}
+
+/* INSTRUCTIONS */
+.instructions p{
+    margin-bottom:12px;
+    line-height:1.8;
+    font-size:15px;
+    color:#d1d5db;
+}
+
+/* SCROLL FIX */
+html, body{
+    height:auto;
+    overflow-y:auto;
+}
