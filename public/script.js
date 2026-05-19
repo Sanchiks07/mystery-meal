@@ -272,3 +272,162 @@ if (canvas) {
         requestAnimationFrame(loop);
     });
 }
+
+// ============ INGREDIENT CHECKBOX PERSISTENCE ============
+
+const INGREDIENTS_STORAGE_KEY = 'mystery-meal-selected-ingredients';
+const SEARCH_STATE_HTML_KEY = 'mystery-meal-search-state-html';
+
+function saveSelectedIngredients() {
+    const selected = Array.from(
+        document.querySelectorAll('input[type="checkbox"][name="ingredients[]"]:checked')
+    ).map(el => el.value);
+    
+    if (selected.length > 0) {
+        localStorage.setItem(INGREDIENTS_STORAGE_KEY, JSON.stringify(selected));
+    } else {
+        localStorage.removeItem(INGREDIENTS_STORAGE_KEY);
+    }
+}
+
+function restoreSelectedIngredients() {
+    const storedValue = localStorage.getItem(INGREDIENTS_STORAGE_KEY);
+    
+    const inputs = document.querySelectorAll('input[type="checkbox"][name="ingredients[]"]');
+    inputs.forEach(input => (input.checked = false));
+    
+    if (!storedValue) {
+        return;
+    }
+
+    let selected;
+    try {
+        selected = JSON.parse(storedValue);
+    } catch (error) {
+        return;
+    }
+
+    if (!Array.isArray(selected)) {
+        return;
+    }
+
+    inputs.forEach(input => {
+        if (selected.includes(input.value)) {
+            input.checked = true;
+        }
+    });
+}
+
+function saveSearchState() {
+    const container = document.getElementById('search-state-container');
+    if (!container) {
+        return;
+    }
+
+    const html = container.innerHTML.trim();
+
+    if (html.length > 0) {
+        localStorage.setItem(SEARCH_STATE_HTML_KEY, html);
+    }
+}
+
+function restoreSearchState() {
+    const container = document.getElementById('search-state-container');
+    if (!container) {
+        return;
+    }
+
+    if (container.children.length > 0) {
+        return;
+    }
+
+    const storedHtml = localStorage.getItem(SEARCH_STATE_HTML_KEY);
+    if (!storedHtml) {
+        return;
+    }
+
+    container.innerHTML = storedHtml;
+}
+
+// Handle ingredient checkbox initialization and persistence
+window.addEventListener('load', () => {
+    const inputs = document.querySelectorAll('input[type="checkbox"][name="ingredients[]"]');
+    if (inputs.length === 0) {
+        return;
+    }
+
+    const isCreatePage = window.location.pathname.includes('/recipes/create');
+
+    if (isCreatePage) {
+        // On create page: clear all storage and uncheck all boxes
+        localStorage.removeItem(INGREDIENTS_STORAGE_KEY);
+        localStorage.removeItem(SEARCH_STATE_HTML_KEY);
+        inputs.forEach(input => (input.checked = false));
+    } else {
+        // On home/search pages: only restore if search results are visible
+        // (meaning user came from a search, not a fresh page load)
+        const selectedBox = document.querySelector('.selected-box');
+        const recipesGrid = document.querySelector('.recipes-grid');
+        
+        if (selectedBox || recipesGrid?.children.length > 0) {
+            // User searched or has results: restore from localStorage
+            restoreSelectedIngredients();
+            restoreSearchState();
+        } else {
+            // Fresh home page load: clear storage and uncheck all boxes
+            localStorage.removeItem(INGREDIENTS_STORAGE_KEY);
+            localStorage.removeItem(SEARCH_STATE_HTML_KEY);
+            inputs.forEach(input => (input.checked = false));
+        }
+    }
+
+    // Save state whenever a checkbox changes
+    inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            saveSelectedIngredients();
+            saveSearchState();
+        });
+    });
+
+    // Handle tag form clicks (remove ingredient)
+    const tagForms = document.querySelectorAll('.tag-form');
+    tagForms.forEach(form => {
+        const button = form.querySelector('.selected-tag');
+        if (button) {
+            button.addEventListener('click', e => {
+                e.preventDefault();
+                const ingredientName = button.textContent.trim().replace('×', '').trim();
+                const checkbox = document.querySelector(
+                    `input[type="checkbox"][name="ingredients[]"][value="${ingredientName}"]`
+                );
+                if (checkbox) {
+                    checkbox.checked = false;
+                    saveSelectedIngredients();
+                    saveSearchState();
+                }
+                form.submit();
+            });
+        }
+    });
+});
+
+// Also handle pageshow for back button navigation
+window.addEventListener('pageshow', () => {
+    const inputs = document.querySelectorAll('input[type="checkbox"][name="ingredients[]"]');
+    if (inputs.length === 0) {
+        return;
+    }
+
+    const isCreatePage = window.location.pathname.includes('/recipes/create');
+
+    if (isCreatePage) {
+        // On create page: clear storage and uncheck boxes
+        localStorage.removeItem(INGREDIENTS_STORAGE_KEY);
+        localStorage.removeItem(SEARCH_STATE_HTML_KEY);
+        inputs.forEach(input => (input.checked = false));
+    } else {
+        // On other pages: restore from storage
+        restoreSelectedIngredients();
+        restoreSearchState();
+    }
+});

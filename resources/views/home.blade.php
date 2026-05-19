@@ -8,9 +8,7 @@ $categories = [
         'Chicken',
         'Beef',
         'Bacon',
-        'Ham',
-        'Sausage',
-        'Turkey'
+        'Ham'
     ],
 
     'Fish' => [
@@ -21,10 +19,10 @@ $categories = [
 
     'Dairy' => [
         'Cheese',
-        'Milk',
-        'Butter',
         'Mozzarella',
         'Parmesan',
+        'Milk',
+        'Butter',
         'Cream',
         'Yogurt'
     ],
@@ -40,19 +38,15 @@ $categories = [
         'Cucumber',
         'Broccoli',
         'Spinach',
-        'Cabbage',
-        'Peas',
-        'Lettuce'
+        'Bell Pepper',
+        'Avocado'
     ],
 
     'Fruits' => [
         'Apple',
         'Banana',
-        'Orange',
         'Lemon',
-        'Strawberry',
-        'Blueberry',
-        'Avocado'
+        'Strawberry'
     ],
 
     'Grains' => [
@@ -60,17 +54,26 @@ $categories = [
         'Pasta',
         'Bread',
         'Flour',
-        'Rice Noodles',
-        'Oats'
+        'Noodles'
+    ],
+
+    'Spices & Sauces' => [
+        'Salt',
+        'Pepper',
+        'Olive Oil',
+        'Soy Sauce',
+        'Tomato Sauce',
+        'Honey',
+        'Sugar',
+        'Cinnamon'
     ],
 
     'Other' => [
         'Egg',
-        'Sugar',
-        'Salt',
-        'Pepper',
         'Chocolate',
-        'Honey'
+        'Basil',
+        'Chicken Broth',
+        'Vanilla'
     ]
 
 ];
@@ -156,15 +159,25 @@ $categories = [
     <!-- MAIN CONTENT -->
     <main class="content">
 
-        <div class="hero">
+        @if(!isset($recipes))
 
-            <h1>Fridge Recipe Finder</h1>
+            <div class="hero">
 
-            <p>
-                Find recipes using ingredients from your fridge
-            </p>
+                <div class="hero-content">
+                    <h1>Recipe Discovery</h1>
 
-        </div>
+                    <p class="hero-subtitle">
+                        Select ingredients you have at home and discover recipes you can make.
+                    </p>
+
+                    <p class="hero-guide">
+                        Select ingredients from the sidebar and click "Find Recipes" to get started.
+                    </p>
+                </div>
+
+            </div>
+
+        @endif
 
         @if(session('success'))
 
@@ -339,7 +352,7 @@ $categories = [
 
                     </div>
 
-                @else
+                @elseif(isset($selected) && count($selected) > 0)
 
                     <div class="empty">
 

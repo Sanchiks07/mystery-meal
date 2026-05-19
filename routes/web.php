@@ -10,6 +10,8 @@ use App\Http\Controllers\UserRecipeController;
 
 Route::get('/', [RecipeController::class, 'index'])->name('home')->middleware('auth');
 
+Route::get('/my-recipes', [RecipeController::class, 'myRecipes'])->name('my-recipes')->middleware('auth');
+
 Route::post('/search', [RecipeController::class, 'search']);
 
 Route::get('/recipe/{id}', [RecipeController::class, 'show']);

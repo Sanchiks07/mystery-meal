@@ -1,18 +1,12 @@
 @auth
 <nav class="navigation">
-    <!-- LEFT SIDE -->
     <div class="nav-left">
         <a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
-<<<<<<< HEAD
+        <a href="{{ route('my-recipes') }}" class="{{ request()->is('my-recipes') ? 'active' : '' }}">My Recipes</a>
         <a href="{{ route('game') }}" class="{{ request()->is('game') ? 'active' : '' }}">Mini-Game</a>
         <a href="{{ route('highscores') }}" class="{{ request()->is('highscores') ? 'active' : '' }}">Leaderboard</a>
-=======
-        <a href="{{ route('game') }}" class="{{ request()->is('game') ? 'active' : '' }}">Game</a>
-        <a href="{{ route('highscores') }}" class="{{ request()->is('highscores') ? 'active' : '' }}">Highscore</a>
         <a href="{{ route('recipes.create') }}" class="{{ request()->is('recipes/create') ? 'active' : '' }}">Create Recipe</a>
-        <a href="{{ route('favorites') }}">
-    ❤️ Favorites
-</a>
+        <a href="{{ route('favorites') }}" class="{{ request()->is('favorites') ? 'active' : '' }}">❤️ Favorites</a>
     </div>
 
     <!-- HAMBURGER -->

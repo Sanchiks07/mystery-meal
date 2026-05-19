@@ -11,26 +11,8 @@ class RecipeController extends Controller
 {
     public function index()
 {
-    // Show user recipes on home page
-    $userRecipes = UserRecipe::all();
-    $recipes = [];
-
-    foreach ($userRecipes as $userRecipe) {
-        $recipes[] = [
-            'id' => 'user-' . $userRecipe->id,
-            'name' => $userRecipe->title,
-            'image' => asset('storage/' . $userRecipe->image),
-            'prepTimeMinutes' => $userRecipe->cook_time,
-            'instructions' => $userRecipe->instructions,
-            'ingredients' => json_decode($userRecipe->ingredients, true) ?? [],
-            'matchedIngredients' => [],
-            'missing' => [],
-            'is_user_recipe' => true,
-            'user_recipe_id' => $userRecipe->id
-        ];
-    }
-
-    return view('home', ['recipes' => $recipes]);
+    // Show only the hero text, no recipes on fresh load
+    return view('home');
 }       // Show user recipes on home page\n        $userRecipes = UserRecipe::all();\n        $recipes = [];\n        \n        foreach ($userRecipes as $userRecipe) {\n            $recipes[] = [\n                'id' => 'user-' . $userRecipe->id,\n                'name' => $userRecipe->title,\n                'image' => asset('storage/' . $userRecipe->image),\n                'prepTimeMinutes' => $userRecipe->cook_time,\n                'instructions' => $userRecipe->instructions,\n                'ingredients' => json_decode($userRecipe->ingredients, true) ?? [],\n                'matchedIngredients' => [],\n                'missing' => [],\n                'is_user_recipe' => true,\n                'user_recipe_id' => $userRecipe->id\n            ];\n        }\n\n        return view('home', ['recipes' => $recipes]);\n    }
 
     public function search(Request $request)
@@ -69,42 +51,6 @@ class RecipeController extends Controller
                 $recipe['is_user_recipe'] = false;
 
                 $matchedRecipes[] = $recipe;
-            }
-        }
-
-        // Add user recipes
-        $userRecipes = UserRecipe::all();
-        foreach ($userRecipes as $userRecipe) {
-            $recipeIngredients = array_map('strtolower', json_decode($userRecipe->ingredients, true) ?? []);
-            $selectedLower = array_map('strtolower', $selectedIngredients);
-
-            $matchedIngredients = [];
-
-            foreach ($selectedLower as $selected) {
-                foreach ($recipeIngredients as $ingredient) {
-                    if (str_contains($ingredient, $selected)) {
-                        $matchedIngredients[] = $selected;
-                    }
-                }
-            }
-
-            $matchedIngredients = array_unique($matchedIngredients);
-
-            if (count($matchedIngredients) >= 1) {
-                $missing = array_diff($recipeIngredients, $matchedIngredients);
-
-                $matchedRecipes[] = [
-                    'id' => 'user-' . $userRecipe->id,
-                    'name' => $userRecipe->title,
-                    'image' => asset('storage/' . $userRecipe->image),
-                    'prepTimeMinutes' => $userRecipe->cook_time,
-                    'instructions' => $userRecipe->instructions,
-                    'ingredients' => json_decode($userRecipe->ingredients, true) ?? [],
-                    'matchedIngredients' => $matchedIngredients,
-                    'missing' => array_slice($missing, 0, 5),
-                    'is_user_recipe' => true,
-                    'user_recipe_id' => $userRecipe->id
-                ];
             }
         }
 
@@ -196,5 +142,28 @@ public function unfavorite($id)
     }
 
     return redirect()->route('favorites')->with('success', 'Removed from favorites');
+}
+
+public function myRecipes()
+{
+    $recipes = UserRecipe::all();
+    $formattedRecipes = [];
+
+    foreach ($recipes as $userRecipe) {
+        $formattedRecipes[] = [
+            'id' => 'user-' . $userRecipe->id,
+            'name' => $userRecipe->title,
+            'image' => asset('storage/' . $userRecipe->image),
+            'prepTimeMinutes' => $userRecipe->cook_time,
+            'instructions' => $userRecipe->instructions,
+            'ingredients' => json_decode($userRecipe->ingredients, true) ?? [],
+            'matchedIngredients' => [],
+            'missing' => [],
+            'is_user_recipe' => true,
+            'user_recipe_id' => $userRecipe->id
+        ];
+    }
+
+    return view('my-recipes', ['recipes' => $formattedRecipes]);
 }
 }
