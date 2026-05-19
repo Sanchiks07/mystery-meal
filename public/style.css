@@ -13,7 +13,7 @@ body {
 }
 
 .main-container {
-    display:flex;
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
@@ -217,21 +217,152 @@ body {
 /* ---------- GAME PAGE ---------- */
 .game-container {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 20px;
+    min-height: 100vh;
+}
+
+.game-container h1 {
+    font-size: 42px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: linear-gradient(45deg, #ffffff, #ffcc00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+.stats {
+    display: flex;
+    gap: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    padding: 20px 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.stats p {
+    font-size: 18px;
+    color: #f5f5f5;
+    letter-spacing: 1px;
+}
+
+.stats span {
+    color: #ffcc00;
+    font-weight: bold;
+    font-size: 20px;
 }
 
 .game-container #gameCanvas {
-    width: 400px;
-    height: 600px;
-    border: 1px solid #000;
+    border: 2px solid rgba(255, 204, 0, 0.4);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    display: block;
+    max-width: 100%;
+    height: auto;
 }
 
 .game-container #gameOver {
     display: none;
-    color: red;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
 }
 
-.highscore-container {
+.game-container #gameOver::after {
+    content: 'GAME OVER';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: rgb(194, 48, 48);
+    padding: 40px 80px;
+    border: 3px solid #942727;
+    border-radius: 16px;
+    box-shadow: 0 0 50px rgba(255, 67, 67, 0.6);
+    pointer-events: none;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ---------- HIGHSCORES PAGE ---------- */
+.highscores-container {
     text-align: center;
+}
+
+.scores-table {
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.scores-table thead {
+    background: linear-gradient(135deg, rgba(255, 204, 0, 0.2), rgba(255, 204, 0, 0.1));
+    border-bottom: 2px solid rgba(255, 204, 0, 0.3);
+}
+
+.scores-table th {
+    padding: 16px;
+    color: #ffcc00;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+.scores-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.2s ease;
+}
+
+.scores-table tbody tr:hover {
+    background: rgba(255, 204, 0, 0.1);
+    transform: scale(1.01);
+}
+
+.scores-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.scores-table td {
+    padding: 14px 16px;
+    color: #f5f5f5;
+    font-size: 15px;
+    text-align: left;
+}
+
+.scores-table tr:nth-child(odd) td {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.scores-table tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.2);
 }
 
 /* ---------- RESPONSIVE DESIGN ---------- */
@@ -305,5 +436,39 @@ body {
     .error-messages {
         width: 100%;
         max-width: 360px;
+    }
+
+    /* game page */
+    .game-container {
+        padding: 20px 15px;
+        gap: 15px;
+    }
+
+    .game-container h1 {
+        font-size: 30px;
+    }
+
+    .stats {
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px 20px;
+    }
+
+    .stats p {
+        font-size: 16px;
+    }
+
+    .stats span {
+        font-size: 18px;
+    }
+
+    .game-container #gameCanvas {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .game-container #gameOver {
+        font-size: 32px;
+        padding: 20px 40px;
     }
 }
