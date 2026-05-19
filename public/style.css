@@ -99,30 +99,70 @@ body {
     align-items: center;
     gap: 20px;
     padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top left, rgba(121, 174, 111, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(52, 103, 57, 0.16), transparent 35%),
+        linear-gradient(135deg, #2d332d, #3a4339, #252925);
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-container::before, .auth-container::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    z-index: 0;
+}
+
+.auth-container::before {
+    width: 220px;
+    height: 220px;
+    background: rgba(121, 174, 111, 0.2);
+    top: -60px;
+    left: -60px;
+}
+
+.auth-container::after {
+    width: 260px;
+    height: 260px;
+    background: rgba(159, 203, 152, 0.15);
+    bottom: -80px;
+    right: -80px;
+}
+
+.auth-container h1, .auth-container p, .auth-container form,
+.error-messages, .default-users {
+    position: relative;
+    z-index: 1;
 }
 
 .auth-container h1 {
     font-size: 42px;
     letter-spacing: 3px;
     text-transform: uppercase;
-    background: linear-gradient(45deg, #ffffff, #ffcc00);
+    background: linear-gradient(45deg, #ffffff, #F2EDC2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(242, 237, 194, 0.15);
 }
 
 .auth-container p {
-    color: #ccc;
+    color: #ececec;
     font-size: 14px;
 }
 
 .auth-container a {
-    color: #ffcc00;
+    color: #9FCB98;
     text-decoration: none;
     font-weight: bold;
+    transition: 0.2s ease;
 }
 
 .auth-container a:hover {
-    text-decoration: underline;
+    color: #F2EDC2;
+    text-shadow: 0 0 10px rgba(242, 237, 194, 0.4);
 }
 
 .auth-container form {
@@ -130,31 +170,46 @@ body {
     flex-direction: column;
     gap: 12px;
     width: 320px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
     padding: 30px;
     border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(242, 237, 194, 0.12);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+    position: relative;
+}
+
+.auth-container form::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(159, 203, 152, 0.3), rgba(242, 237, 194, 0.2), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    pointer-events: none;
 }
 
 .auth-container input {
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(0,0,0,0.4);
+    background: rgba(255,255,255,0.08);
     color: #fff;
     outline: none;
     transition: 0.2s ease;
 }
 
 .auth-container input::placeholder {
-    color: #aaa;
+    color: #d0d0d0;
 }
 
 .auth-container input:focus {
-    border-color: #ffcc00;
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+    border-color: #9FCB98;
+    background: rgba(255,255,255,0.12);
+    box-shadow: 0 0 12px rgba(159, 203, 152, 0.25);
+    transform: translateY(-1px);
 }
 
 .auth-container button {
@@ -162,56 +217,72 @@ body {
     padding: 10px;
     border-radius: 10px;
     border: none;
-    background: linear-gradient(45deg, #ffcc00, #ffd633);
-    color: #000;
+    background: linear-gradient(45deg, #79AE6F, #9FCB98);
+    color: #111;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 5px 20px rgba(255, 204, 0, 0.4);
+    box-shadow: 0 5px 20px rgba(121, 174, 111, 0.3);
 }
 
 .auth-container button:hover {
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 10px 30px rgba(255, 204, 0, 0.6);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(121, 174, 111, 0.4);
+}
+
+.auth-container button:active {
+    transform: scale(0.98);
 }
 
 .error-messages {
-    background: rgba(255, 0, 0, 0.1);
-    border: 1px solid rgba(255, 0, 0, 0.3);
+    background: rgba(255, 80, 80, 0.08);
+    border: 1px solid rgba(255, 120, 120, 0.15);
     padding: 12px 16px;
     border-radius: 10px;
-    color: #ff6b6b;
+    color: #fff;
     max-width: 320px;
     width: 100%;
+    backdrop-filter: blur(10px);
+}
+
+.error-messages p {
+    color: #ffe0e0;
 }
 
 .default-users {
     margin-top: 20px;
     width: 320px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
     padding: 20px;
     border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(242, 237, 194, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .default-users h2 {
     margin-bottom: 10px;
-    color: #ffcc00;
+    color: #F2EDC2;
+    letter-spacing: 1px;
 }
 
 .default-users p {
     font-size: 14px;
-    color: #ddd;
+    color: #f1f1f1;
     line-height: 1.5;
+}
+
+.default-users strong {
+    color: #ffffff;
 }
 
 .default-users hr {
     margin: 12px 0;
     border: none;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255,255,255,0.12);
 }
 
 /* ---------- GAME PAGE ---------- */

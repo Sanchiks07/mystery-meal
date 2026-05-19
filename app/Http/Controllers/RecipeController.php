@@ -9,7 +9,28 @@ use Illuminate\Support\Facades\Http;
 class RecipeController extends Controller
 {
     public function index()
-    {\n        // Show user recipes on home page\n        $userRecipes = UserRecipe::all();\n        $recipes = [];\n        \n        foreach ($userRecipes as $userRecipe) {\n            $recipes[] = [\n                'id' => 'user-' . $userRecipe->id,\n                'name' => $userRecipe->title,\n                'image' => asset('storage/' . $userRecipe->image),\n                'prepTimeMinutes' => $userRecipe->cook_time,\n                'instructions' => $userRecipe->instructions,\n                'ingredients' => json_decode($userRecipe->ingredients, true) ?? [],\n                'matchedIngredients' => [],\n                'missing' => [],\n                'is_user_recipe' => true,\n                'user_recipe_id' => $userRecipe->id\n            ];\n        }\n\n        return view('home', ['recipes' => $recipes]);\n    }
+    {
+        // Show user recipes on home page
+        $userRecipes = UserRecipe::all();
+        $recipes = [];
+        
+        foreach ($userRecipes as $userRecipe) {
+            $recipes[] = [
+                'id' => 'user-' . $userRecipe->id,
+                'name' => $userRecipe->title,
+                'image' => asset('storage/' . $userRecipe->image),
+                'prepTimeMinutes' => $userRecipe->cook_time,
+                'instructions' => $userRecipe->instructions,
+                'ingredients' => json_decode($userRecipe->ingredients, true) ?? [],
+                'matchedIngredients' => [],
+                'missing' => [],
+                'is_user_recipe' => true,
+                'user_recipe_id' => $userRecipe->id
+            ];
+        }
+
+        return view('home', ['recipes' => $recipes]);
+    }
 
     public function search(Request $request)
     {

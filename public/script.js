@@ -85,24 +85,24 @@ if (canvas) {
     }
 
     const loadedFood = [
-        loadImage("/images/game/apple.png"),
-        loadImage("/images/game/burger.png"),
-        loadImage("/images/game/cake.png"),
-        loadImage("/images/game/cookie.png"),
-        loadImage("/images/game/grape.png"),
-        loadImage("/images/game/ice-cream.png"),
-        loadImage("/images/game/lemon.png"),
-        loadImage("/images/game/pizza.png"),
-        loadImage("/images/game/sushi.png"),
-        loadImage("/images/game/taco.png")
+        loadImage("/images/apple.png"),
+        loadImage("/images/burger.png"),
+        loadImage("/images/cake.png"),
+        loadImage("/images/cookie.png"),
+        loadImage("/images/grape.png"),
+        loadImage("/images/ice-cream.png"),
+        loadImage("/images/lemon.png"),
+        loadImage("/images/pizza.png"),
+        loadImage("/images/sushi.png"),
+        loadImage("/images/taco.png")
     ];
 
     const loadedBad = [
-        loadImage("/images/game/bomb.png"),
-        loadImage("/images/game/knife.png"),
-        loadImage("/images/game/scissors.png"),
-        loadImage("/images/game/saw.png"),
-        loadImage("/images/game/high-heel.png")
+        loadImage("/images/bomb.png"),
+        loadImage("/images/knife.png"),
+        loadImage("/images/scissors.png"),
+        loadImage("/images/saw.png"),
+        loadImage("/images/high-heel.png")
     ];
 
     // ---------------- SPAWN ----------------
