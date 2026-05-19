@@ -7,7 +7,7 @@
 
 <div class="recipe-page">
 
-    <a href="/" class="back-btn">← Back</a>
+    <a href="{{ url()->previous() }}" class="back-btn" onclick="event.preventDefault(); history.back();">← Back</a>
 
     <h1>{{ $recipe['name'] ?? $recipe['title'] }}</h1>
 

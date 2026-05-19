@@ -34,3 +34,16 @@ Route::get('/game', [GameController::class, 'index'])->name('game')->middleware(
 Route::post('/save-score', [GameController::class, 'save'])->name('save-score')->middleware('auth');
 Route::get('/highscores', [GameController::class, 'highscores'])->name('highscores')->middleware('auth');
 
+// favorites 
+Route::post('/favorite', [RecipeController::class, 'favorite'])
+    ->middleware('auth')
+    ->name('favorite');
+
+Route::post('/favorite/{id}/remove', [RecipeController::class, 'unfavorite'])
+    ->middleware('auth')
+    ->name('favorite.remove');
+
+Route::get('/favorites', [RecipeController::class, 'favorites'])
+    ->middleware('auth')
+    ->name('favorites');
+

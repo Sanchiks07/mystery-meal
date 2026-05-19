@@ -6,6 +6,9 @@
         <a href="{{ route('game') }}" class="{{ request()->is('game') ? 'active' : '' }}">Game</a>
         <a href="{{ route('highscores') }}" class="{{ request()->is('highscores') ? 'active' : '' }}">Highscore</a>
         <a href="{{ route('recipes.create') }}" class="{{ request()->is('recipes/create') ? 'active' : '' }}">Create Recipe</a>
+        <a href="{{ route('favorites') }}">
+    ❤️ Favorites
+</a>
     </div>
 
     <!-- HAMBURGER -->
