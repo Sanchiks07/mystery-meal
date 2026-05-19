@@ -2,9 +2,6 @@
     <title>Create Recipe</title>
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-
 <div class="recipe-create-page">
 
     <div class="create-container">

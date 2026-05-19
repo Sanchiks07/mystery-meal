@@ -656,4 +656,36 @@ body{
         margin-left:0;
         height:auto;
     }
+    .recipe-card{
+    position:relative;
+}
+
+.favorite-form{
+    position:absolute;
+    top:16px;
+    right:16px;
+    z-index:20;
+}
+
+.favorite-btn{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(8px);
+    color:white;
+    font-size:24px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:0.2s;
+}
+
+.favorite-btn:hover{
+    transform:scale(1.08);
+    background:rgba(0,0,0,0.65);
+    color:#ff4d6d;
+}
 }
